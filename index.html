@@ -5,46 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RewardPlay | Play & Earn</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #a855f7, #ec4899, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans">
+<body class="bg-slate-950 text-slate-100">
 
-    <!-- Navbar -->
     <nav class="flex items-center justify-between p-6 max-w-7xl mx-auto">
-        <div class="text-2xl font-black text-white tracking-tighter">REWARD<span class="text-purple-500">PLAY</span></div>
-        <div id="authContainer" class="flex gap-4">
-            <!-- Buttons dynamically update hoke yahan ayenge -->
-        </div>
+        <div class="text-2xl font-black text-white">REWARD<span class="text-purple-500">PLAY</span></div>
+        <div id="navButtons" class="flex gap-4"></div>
     </nav>
 
-    <!-- Hero -->
     <section class="max-w-7xl mx-auto px-6 py-16 text-center">
-        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Play Games & <span class="gradient-text">Earn Rewards</span></h1>
-        <button onclick="openAuth('register')" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full hover:bg-slate-200 transition">Start Earning</button>
+        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Play Games & <span class="text-purple-500">Earn Rewards</span></h1>
+        <div id="heroButtonContainer"></div>
     </section>
 
-    <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden px-4">
-        <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl w-full max-w-md shadow-2xl relative">
-            <button onclick="toggleModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+        <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-md">
             <h2 id="modalTitle" class="text-2xl font-black mb-6">Login</h2>
-            
             <div class="space-y-4">
-                <input id="email" type="email" placeholder="Email Address" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
-                <input id="password" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
-                <button id="authBtn" onclick="handleAuth()" class="w-full py-4 bg-purple-600 rounded-xl font-bold hover:bg-purple-500">Login</button>
-                
+                <input id="email" type="email" placeholder="Email Address" class="w-full p-4 rounded-xl bg-slate-800 border">
+                <input id="password" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-800 border">
+                <button id="authBtn" onclick="handleAuth()" class="w-full py-4 bg-purple-600 rounded-xl font-bold">Login</button>
                 <button onclick="handleForgotPassword()" class="text-xs text-purple-400 w-full text-center hover:underline">Forgot Password?</button>
-
-                <div class="text-center text-sm text-slate-500">OR</div>
-                
-                <button onclick="handleGoogleAuth()" class="w-full py-4 bg-white text-black rounded-xl font-bold hover:bg-slate-200 transition flex justify-center items-center gap-2">
-                    Sign in with Google
-                </button>
             </div>
             <p class="text-center text-sm text-slate-400 mt-4" id="toggleText">Don't have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer">Register</span></p>
         </div>
@@ -52,7 +33,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB1R649DqYq8znj_PvkKT2fwNf0KgSqbvE",
@@ -65,69 +46,29 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        let isLogin = true;
 
-        // UI Update Logic (Login hone par kya dikhe)
+        // Logic: Check if user is logged in
         onAuthStateChanged(auth, (user) => {
-            const authContainer = document.getElementById('authContainer');
+            const nav = document.getElementById('navButtons');
+            const hero = document.getElementById('heroButtonContainer');
+
             if (user) {
-                authContainer.innerHTML = `<button onclick="handleLogout()" class="px-5 py-2 text-sm font-bold text-red-400 hover:text-red-300">Logout</button>`;
+                // User logged in: Show Dashboard button
+                nav.innerHTML = `<button onclick="window.location.href='dashboard.html'" class="px-5 py-2 text-sm font-bold bg-green-600 rounded-full">Dashboard</button>
+                                 <button onclick="handleLogout()" class="px-5 py-2 text-sm font-bold text-red-400">Logout</button>`;
+                hero.innerHTML = `<button onclick="window.location.href='dashboard.html'" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full">Go to Dashboard</button>`;
             } else {
-                authContainer.innerHTML = `<button onclick="openAuth('login')" class="px-5 py-2 text-sm font-bold text-slate-300">Login</button>
-                                          <button onclick="openAuth('register')" class="px-5 py-2 text-sm font-bold bg-purple-600 rounded-full hover:bg-purple-500">Register</button>`;
+                // User logged out: Show Login/Register
+                nav.innerHTML = `<button onclick="openAuth('login')" class="px-5 py-2 text-sm font-bold text-slate-300">Login</button>
+                                 <button onclick="openAuth('register')" class="px-5 py-2 text-sm font-bold bg-purple-600 rounded-full">Register</button>`;
+                hero.innerHTML = `<button onclick="openAuth('register')" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full">Start Earning</button>`;
             }
         });
 
-        // Modal Functions
-        window.openAuth = (mode) => {
-            isLogin = (mode === 'login');
-            updateModalUI();
-            document.getElementById('authModal').classList.remove('hidden');
-        };
-
-        window.toggleModal = () => document.getElementById('authModal').classList.toggle('hidden');
-
-        window.switchMode = () => {
-            isLogin = !isLogin;
-            updateModalUI();
-        };
-
-        function updateModalUI() {
-            document.getElementById('modalTitle').innerText = isLogin ? "Login" : "Register";
-            document.getElementById('authBtn').innerText = isLogin ? "Login" : "Register";
-            document.getElementById('toggleText').innerHTML = isLogin ? "Don't have an account? <span onclick='switchMode()' class='text-purple-400 cursor-pointer'>Register</span>" : "Already have an account? <span onclick='switchMode()' class='text-purple-400 cursor-pointer'>Login</span>";
-        }
-
-        // Auth Logic
-        window.handleAuth = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-                if(isLogin) await signInWithEmailAndPassword(auth, email, password);
-                else await createUserWithEmailAndPassword(auth, email, password);
-                alert("Success!");
-                toggleModal();
-            } catch (error) { alert(error.message); }
-        };
-
-        window.handleGoogleAuth = async () => {
-            try {
-                await signInWithPopup(auth, provider);
-                toggleModal();
-            } catch (error) { alert(error.message); }
-        };
-
-        window.handleForgotPassword = async () => {
-            const email = document.getElementById('email').value;
-            if(!email) return alert("Please enter your email!");
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Reset email sent!");
-            } catch (error) { alert(error.message); }
-        };
-
         window.handleLogout = () => signOut(auth).then(() => alert("Logged out!"));
+        window.openAuth = (mode) => { document.getElementById('authModal').classList.remove('hidden'); };
+        window.toggleModal = () => document.getElementById('authModal').classList.toggle('hidden');
+        // ... (Baaki functions handleAuth aur switchMode wahi purane wale rakho)
     </script>
 </body>
 </html>
