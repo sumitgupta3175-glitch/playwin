@@ -13,19 +13,21 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans">
 
+    <!-- Navbar -->
     <nav class="flex items-center justify-between p-6 max-w-7xl mx-auto">
         <div class="text-2xl font-black text-white tracking-tighter">REWARD<span class="text-purple-500">PLAY</span></div>
-        <div class="flex gap-4">
-            <button onclick="openAuth('login')" class="px-5 py-2 text-sm font-bold text-slate-300">Login</button>
-            <button onclick="openAuth('register')" class="px-5 py-2 text-sm font-bold bg-purple-600 rounded-full hover:bg-purple-500 transition">Register</button>
+        <div id="authContainer" class="flex gap-4">
+            <!-- Buttons dynamically update hoke yahan ayenge -->
         </div>
     </nav>
 
+    <!-- Hero -->
     <section class="max-w-7xl mx-auto px-6 py-16 text-center">
         <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Play Games & <span class="gradient-text">Earn Rewards</span></h1>
         <button onclick="openAuth('register')" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full hover:bg-slate-200 transition">Start Earning</button>
     </section>
 
+    <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden px-4">
         <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl w-full max-w-md shadow-2xl relative">
             <button onclick="toggleModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
@@ -36,6 +38,8 @@
                 <input id="password" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
                 <button id="authBtn" onclick="handleAuth()" class="w-full py-4 bg-purple-600 rounded-xl font-bold hover:bg-purple-500">Login</button>
                 
+                <button onclick="handleForgotPassword()" class="text-xs text-purple-400 w-full text-center hover:underline">Forgot Password?</button>
+
                 <div class="text-center text-sm text-slate-500">OR</div>
                 
                 <button onclick="handleGoogleAuth()" class="w-full py-4 bg-white text-black rounded-xl font-bold hover:bg-slate-200 transition flex justify-center items-center gap-2">
@@ -48,7 +52,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB1R649DqYq8znj_PvkKT2fwNf0KgSqbvE",
@@ -56,16 +60,26 @@
             projectId: "rewardplay-33748",
             storageBucket: "rewardplay-33748.firebasestorage.app",
             messagingSenderId: "761644813946",
-            appId: "1:761644813946:web:41baed03cea7ed0846f5c3",
-            measurementId: "G-Q5YZCGHVRV"
+            appId: "1:761644813946:web:41baed03cea7ed0846f5c3"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-
         let isLogin = true;
 
+        // UI Update Logic (Login hone par kya dikhe)
+        onAuthStateChanged(auth, (user) => {
+            const authContainer = document.getElementById('authContainer');
+            if (user) {
+                authContainer.innerHTML = `<button onclick="handleLogout()" class="px-5 py-2 text-sm font-bold text-red-400 hover:text-red-300">Logout</button>`;
+            } else {
+                authContainer.innerHTML = `<button onclick="openAuth('login')" class="px-5 py-2 text-sm font-bold text-slate-300">Login</button>
+                                          <button onclick="openAuth('register')" class="px-5 py-2 text-sm font-bold bg-purple-600 rounded-full hover:bg-purple-500">Register</button>`;
+            }
+        });
+
+        // Modal Functions
         window.openAuth = (mode) => {
             isLogin = (mode === 'login');
             updateModalUI();
@@ -85,38 +99,35 @@
             document.getElementById('toggleText').innerHTML = isLogin ? "Don't have an account? <span onclick='switchMode()' class='text-purple-400 cursor-pointer'>Register</span>" : "Already have an account? <span onclick='switchMode()' class='text-purple-400 cursor-pointer'>Login</span>";
         }
 
-        // Email/Password Auth
+        // Auth Logic
         window.handleAuth = async () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             try {
-                if(isLogin) {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    alert("Welcome back!");
-                } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    alert("Account created successfully!");
-                }
+                if(isLogin) await signInWithEmailAndPassword(auth, email, password);
+                else await createUserWithEmailAndPassword(auth, email, password);
+                alert("Success!");
                 toggleModal();
-            } catch (error) {
-                alert(error.message);
-            }
+            } catch (error) { alert(error.message); }
         };
 
-        // Google Auth
         window.handleGoogleAuth = async () => {
             try {
-                const result = await signInWithPopup(auth, provider);
-                alert("Login successful with Google: " + result.user.email);
+                await signInWithPopup(auth, provider);
                 toggleModal();
-            } catch (error) {
-                alert("Google Sign-in failed: " + error.message);
-            }
+            } catch (error) { alert(error.message); }
         };
-    </script>
 
-    <script>
-        lucide.createIcons();
+        window.handleForgotPassword = async () => {
+            const email = document.getElementById('email').value;
+            if(!email) return alert("Please enter your email!");
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Reset email sent!");
+            } catch (error) { alert(error.message); }
+        };
+
+        window.handleLogout = () => signOut(auth).then(() => alert("Logged out!"));
     </script>
 </body>
 </html>
