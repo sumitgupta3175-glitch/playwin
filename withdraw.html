@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal | RewardPlay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-6">
+
+    <div class="max-w-xl mx-auto">
+        <div class="flex items-center mb-8">
+            <button onclick="window.history.back()" class="mr-4 text-slate-400 hover:text-white">← Back</button>
+            <h1 class="text-2xl font-bold">Withdraw Money</h1>
+        </div>
+        
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700 mb-6 text-center">
+            <p class="text-slate-400 text-sm">Available Balance</p>
+            <div id="userBalance" class="text-4xl font-black text-purple-400">0</div>
+            <p class="text-slate-500 text-xs mt-1">100 Points = ₹1</p>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm mb-2 font-medium">Enter UPI ID</label>
+            <input type="text" id="upiId" placeholder="example@upi" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 outline-none focus:border-purple-500 transition">
+        </div>
+
+        <p class="text-sm text-slate-400 mb-4">Select Amount to Withdraw:</p>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="requestWithdraw(30)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹30</button>
+            <button onclick="requestWithdraw(50)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹50</button>
+            <button onclick="requestWithdraw(75)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹75</button>
+            <button onclick="requestWithdraw(100)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹100</button>
+            <button onclick="requestWithdraw(200)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹200</button>
+            <button onclick="requestWithdraw(500)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹500</button>
+            <button onclick="requestWithdraw(1000)" class="p-4 bg-slate-800 rounded-xl hover:bg-purple-900 border border-slate-700 font-bold transition">₹1000</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // IMPORTANT: Yahan wahi config daalo jo tumhare baaki pages mein hai
+        const firebaseConfig = { 
+            /* Paste your Firebase Config here */ 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let userPoints = 0;
+        let userEmail = "";
+
+        // User ka balance fetch karo
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'index.html'; 
+            } else {
+                userEmail = user.email;
+                const docRef = await getDoc(doc(db, "users", user.uid));
+                if (docRef.exists()) {
+                    userPoints = docRef.data().points || 0;
+                    document.getElementById('userBalance').innerText = userPoints;
+                }
+            }
+        });
+
+        // Withdrawal Request Logic
+        window.requestWithdraw = async (amount) => {
+            const upi = document.getElementById('upiId').value.trim();
+            
+            if (!upi) { 
+                alert("Please enter a valid UPI ID"); 
+                return; 
+            }
+            
+            // 1 Rupee = 100 Points ratio
+            const requiredPoints = amount * 100; 
+            
+            if (userPoints < requiredPoints) {
+                alert(`Insufficient balance! You need ${requiredPoints} points to withdraw ₹${amount}.`);
+                return;
+            }
+
+            try {
+                // Firebase mein request save karo
+                await addDoc(collection(db, "withdrawals"), {
+                    email: userEmail,
+                    upi: upi,
+                    amount: amount,
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+                
+                alert("Success! Your withdrawal request of ₹" + amount + " has been sent for review.");
+            } catch (e) {
+                console.error("Error: ", e);
+                alert("Failed to send request. Please try again.");
+            }
+        };
+    </script>
+</body>
+</html>
