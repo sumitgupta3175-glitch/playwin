@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | RewardPlay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+
+    <nav class="flex items-center justify-between p-6 max-w-7xl mx-auto">
+        <div class="text-2xl font-black text-white">REWARD<span class="text-purple-500">PLAY</span></div>
+        <div class="flex items-center gap-4">
+            <div id="userEmail" class="text-sm"></div>
+            <button onclick="handleLogout()" class="px-4 py-2 bg-red-600 rounded-full text-sm font-bold">Logout</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto mt-10 p-6">
+        <div class="bg-slate-900 p-8 rounded-3xl border border-slate-700">
+            <h2 class="text-2xl font-bold mb-4">Earn Coins</h2>
+            <button onclick="alert('Ads loaded!')" class="w-full py-4 bg-blue-600 rounded-xl font-bold hover:bg-blue-500">Watch Ads</button>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = { /* Wahi config jo index.html mein hai */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Security: Agar user login nahi hai, toh wapas bhej do
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('userEmail').innerText = user.email;
+            }
+        });
+
+        window.handleLogout = () => signOut(auth).then(() => window.location.href = 'index.html');
+    </script>
+</body>
+</html>
+
