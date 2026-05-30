@@ -56,13 +56,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+        // Full Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB1R649DqYq8znj_PvkKT2fwNf0KgSqbvE",
             authDomain: "rewardplay-33748.firebaseapp.com",
             projectId: "rewardplay-33748",
             storageBucket: "rewardplay-33748.firebasestorage.app",
             messagingSenderId: "761644813946",
-            appId: "1:761644813946:web:41baed03cea7ed0846f5c3"
+            appId: "1:761644813946:web:41baed03cea7ed0846f5c3",
+            measurementId: "G-Q5YZCGHVRV"
         };
 
         const app = initializeApp(firebaseConfig);
