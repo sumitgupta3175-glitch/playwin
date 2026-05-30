@@ -1,84 +1,125 @@
-<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden px-4">
-    <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-md">
-        <h2 id="modalTitle" class="text-2xl font-black mb-6">Login</h2>
-        <div class="space-y-4">
-            <input id="email" type="email" placeholder="Email Address" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700">
-            <input id="password" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700">
-            <button id="authBtn" onclick="handleAuth()" class="w-full py-4 bg-purple-600 rounded-xl font-bold">Login</button>
-            
-            <button onclick="handleGoogle()" class="w-full py-4 bg-white text-black rounded-xl font-bold">Sign in with Google</button>
-            
-            <button onclick="handleForgotPassword()" class="text-xs text-purple-400 w-full text-center hover:underline">Forgot Password?</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RewardPlay | Play & Earn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+
+    <nav class="flex items-center justify-between p-6 max-w-7xl mx-auto">
+        <div class="text-2xl font-black text-white">REWARD<span class="text-purple-500">PLAY</span></div>
+        <div id="navButtons" class="flex gap-4"></div>
+    </nav>
+
+    <section class="max-w-7xl mx-auto px-6 py-16 text-center">
+        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Play Games & <span class="text-purple-500">Earn Rewards</span></h1>
+        <div id="heroButtonContainer"></div>
+    </section>
+
+    <section class="max-w-4xl mx-auto px-6 mb-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center">
+                <p class="text-purple-400 mb-2">★★★★★</p>
+                <p class="text-slate-300 text-sm">"Best platform! Withdrawal is super fast."</p>
+                <p class="mt-4 font-bold text-sm">- Rahul K.</p>
+            </div>
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center">
+                <p class="text-purple-400 mb-2">★★★★★</p>
+                <p class="text-slate-300 text-sm">"Earning real money while playing games is fun."</p>
+                <p class="mt-4 font-bold text-sm">- Priya S.</p>
+            </div>
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center">
+                <p class="text-purple-400 mb-2">★★★★★</p>
+                <p class="text-slate-300 text-sm">"Reliable app, 100% recommended for everyone."</p>
+                <p class="mt-4 font-bold text-sm">- Amit V.</p>
+            </div>
         </div>
-        <p class="text-center text-sm text-slate-400 mt-4" id="toggleText">Don't have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer">Register</span></p>
+    </section>
+
+    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden px-4">
+        <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-md">
+            <h2 id="modalTitle" class="text-2xl font-black mb-6">Login</h2>
+            <div class="space-y-4">
+                <input id="email" type="email" placeholder="Email Address" class="w-full p-4 rounded-xl bg-slate-800 border">
+                <input id="password" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-800 border">
+                <button id="authBtn" onclick="handleAuth()" class="w-full py-4 bg-purple-600 rounded-xl font-bold">Login</button>
+                <button onclick="handleGoogle()" class="w-full py-4 bg-white text-black rounded-xl font-bold">Sign in with Google</button>
+                <button onclick="handleForgotPassword()" class="text-xs text-purple-400 w-full text-center hover:underline">Forgot Password?</button>
+            </div>
+            <p class="text-center text-sm text-slate-400 mt-4" id="toggleText">Don't have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer underline">Register</span></p>
+        </div>
     </div>
-</div>
 
-<section class="max-w-7xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-black text-center mb-12">Trusted by 5000+ Gamers</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-            <p class="text-purple-400 mb-2">★★★★★</p>
-            <p class="text-slate-300">"Best platform to earn rewards while playing games. Withdrawals are instant!"</p>
-            <p class="mt-4 font-bold">- Rahul Kumar</p>
-        </div>
-        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-            <p class="text-purple-400 mb-2">★★★★★</p>
-            <p class="text-slate-300">"I earned ₹500 in just 2 days. Highly recommended app for gamers."</p>
-            <p class="mt-4 font-bold">- Priya Sharma</p>
-        </div>
-        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-            <p class="text-purple-400 mb-2">★★★★★</p>
-            <p class="text-slate-300">"Easy interface and reliable. My go-to app for free time earning."</p>
-            <p class="mt-4 font-bold">- Amit Singh</p>
-        </div>
-    </div>
-</section>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1R649DqYq8znj_PvkKT2fwNf0KgSqbvE",
+            authDomain: "rewardplay-33748.firebaseapp.com",
+            projectId: "rewardplay-33748",
+            storageBucket: "rewardplay-33748.firebasestorage.app",
+            messagingSenderId: "761644813946",
+            appId: "1:761644813946:web:41baed03cea7ed0846f5c3"
+        };
 
-    // Firebase Config (Wahi purana)
-    const firebaseConfig = { /* ... tumhara config ... */ };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    let isRegistering = false;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        let isRegister = false;
 
-    // Google Auth Logic
-    window.handleGoogle = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithPopup(auth, provider);
-            alert("Google se login ho gaya!");
-            window.location.reload();
-        } catch (e) { alert(e.message); }
-    };
+        // Auth State Handler
+        onAuthStateChanged(auth, (user) => {
+            const nav = document.getElementById('navButtons');
+            const hero = document.getElementById('heroButtonContainer');
 
-    // Toggle Mode (Login <-> Register)
-    window.switchMode = () => {
-        isRegistering = !isRegistering;
-        document.getElementById('modalTitle').innerText = isRegistering ? "Register" : "Login";
-        document.getElementById('authBtn').innerText = isRegistering ? "Register Now" : "Login";
-        document.getElementById('toggleText').innerHTML = isRegistering ? 
-            'Already have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer">Login</span>' : 
-            'Don\'t have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer">Register</span>';
-    };
-
-    // Auth Logic (Login/Register)
-    window.handleAuth = async () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        try {
-            if (isRegistering) {
-                await createUserWithEmailAndPassword(auth, email, password);
-                alert("Account ban gaya!");
+            if (user) {
+                nav.innerHTML = `<button onclick="window.location.href='dashboard.html'" class="px-5 py-2 text-sm font-bold bg-green-600 rounded-full">Dashboard</button>
+                                 <button onclick="handleLogout()" class="px-5 py-2 text-sm font-bold text-red-400">Logout</button>`;
+                hero.innerHTML = `<button onclick="window.location.href='dashboard.html'" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full">Go to Dashboard</button>`;
             } else {
-                await signInWithEmailAndPassword(auth, email, password);
+                nav.innerHTML = `<button onclick="openAuth('login')" class="px-5 py-2 text-sm font-bold text-slate-300">Login</button>
+                                 <button onclick="openAuth('register')" class="px-5 py-2 text-sm font-bold bg-purple-600 rounded-full">Register</button>`;
+                hero.innerHTML = `<button onclick="openAuth('register')" class="px-8 py-4 bg-white text-slate-950 font-bold rounded-full">Start Earning</button>`;
             }
-            window.location.reload();
-        } catch (e) { alert(e.message); }
-    };
-    
-    // ... baki onAuthStateChanged logic wahi rahega ...
-</script>
+        });
+
+        // Switch Logic
+        window.switchMode = () => {
+            isRegister = !isRegister;
+            document.getElementById('modalTitle').innerText = isRegister ? "Register" : "Login";
+            document.getElementById('authBtn').innerText = isRegister ? "Register Now" : "Login";
+            document.getElementById('toggleText').innerHTML = isRegister ? 
+                'Already have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer underline">Login</span>' : 
+                'Don\'t have an account? <span onclick="switchMode()" class="text-purple-400 cursor-pointer underline">Register</span>';
+        };
+
+        // Auth Logic
+        window.handleAuth = async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                if (isRegister) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                document.getElementById('authModal').classList.add('hidden');
+            } catch (e) { alert(e.message); }
+        };
+
+        // Google Auth
+        window.handleGoogle = async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                document.getElementById('authModal').classList.add('hidden');
+            } catch (e) { alert(e.message); }
+        };
+
+        window.handleLogout = () => signOut(auth).then(() => alert("Logged out!"));
+        window.openAuth = (mode) => { document.getElementById('authModal').classList.remove('hidden'); };
+    </script>
+</body>
+</html>
