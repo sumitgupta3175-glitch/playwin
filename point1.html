@@ -3,69 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Step 2/3 - Download Link</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 15px; border-radius: 8px; }
-        
-        /* Green Button Style */
-        .smart-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-        .instruction { margin: 15px 0; font-weight: bold; }
-        .hindi-text { color: #555; margin-top: 5px; }
-        
-        /* Anime Section */
-        .content-section { text-align: left; margin-top: 20px; line-height: 1.6; }
-    </style>
-
+    <title>Step 2/3 - Anime Info</title>
     <script src="https://pl29356253.effectivecpmnetwork.com/23/52/7b/23527bc19bc0c40d9ce713d855526d69.js"></script>
     <script src="https://pl29356256.effectivecpmnetwork.com/17/e9/8a/17e98a5734a03ce7f125160fdb7dd4a8.js"></script>
+
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f4f4f4; padding: 10px; margin: 0; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 15px; border-radius: 10px; }
+        .green-btn { background-color: #4CAF50; color: white; padding: 15px; margin: 10px 0; border: none; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; }
+        .center-box { margin: 20px 0; padding: 10px; border: 1px dashed #ccc; }
+        .verify-btn { background-color: #007bff; color: white; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer; display: none; }
+        #anime-content { display: none; text-align: left; margin: 20px 0; padding: 15px; background: #f9f9f9; border-left: 5px solid #007bff; }
+        .continue-btn { background-color: #ff9800; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; margin-top: 20px; font-size: 18px; display: none; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>You are currently on step 2/3.</h2>
+<div class="container">
+    <h2>You are currently on step 2/3.</h2>
+    
+    <div id="container-86adcd133a15be5f1f9c27dd8bdd54f1"></div>
+    <script async="async" data-cfasync="false" src="https://pl29356254.effectivecpmnetwork.com/86adcd133a15be5f1f9c27dd8bdd54f1/invoke.js"></script>
 
-        <div id="container-86adcd133a15be5f1f9c27dd8bdd54f1"></div>
-        <script async="async" data-cfasync="false" src="https://pl29356254.effectivecpmnetwork.com/86adcd133a15be5f1f9c27dd8bdd54f1/invoke.js"></script>
+    <button class="green-btn" onclick="openSmartlink()">▼ CLICK ANY IMAGE & Wait 15 Seconds to GET LINK ▼</button>
 
-        <button class="smart-btn" onclick="openLinks()">▼ CLICK ANY IMAGE & Wait 15 Seconds to GET LINK ▼</button>
-        <button class="smart-btn" onclick="openLinks()">▼ CLICK ANY IMAGE & Wait 15 Seconds to GET LINK ▼</button>
-
-        <p class="instruction">👇 Click Image & Wait & Come back this page to Get Link - Download.</p>
-        <p class="hindi-text">▼ LINK पाने और DOWNLOAD करने के लिए, 👇 फोटो पर क्लिक करें, 15 सेकंड रुकें और फिर इसी पेज पर वापस आएं</p>
-
-        <div class="content-section">
-            <h3>Key Characteristics of Anime</h3>
-            <p><strong>Art Style:</strong> Features distinct visual traits like large, expressive eyes, vibrant hair colors, and dynamic action framing.</p>
-            <p><strong>Not a Genre:</strong> Anime is an art form and a medium. It spans countless genres, from horror and romance to science fiction and historical drama.</p>
-            <p><strong>Demographics:</strong> Unlike western animation, which is largely aimed at kids, anime has specific demographic categories: Kodomomuke, Shonen, Shojo, and Seinen/Josei.</p>
-            <p><strong>Popular Platforms:</strong> You can stream official releases on Crunchyroll or Netflix.</p>
-        </div>
-
-        <div style="margin-top:20px;">
-            <script type="text/javascript" src="https://www.highperformanceformat.com/11a07e056c0614350727fba232bcc005/invoke.js"></script>
-        </div>
+    <div class="center-box">
+        <div id="timer">Please wait: 10 seconds</div>
+        <button id="verify-btn" class="verify-btn" onclick="startLoading()">VERIFY</button>
+        <div id="loading" style="display:none;">Loading content...</div>
     </div>
 
-    <script>
-        function openLinks() {
-            // 1. Open Smartlink (Ad) in a new tab
-            window.open('https://www.effectivecpmnetwork.com/mrneyfk9?key=a0779778c1be0ef56d1f5e81ea137647', '_blank');
-            
-            // 2. Redirect the current page to your destination (Change this URL)
-            window.location.href = 'https://your-final-download-page.com';
+    <button class="green-btn" onclick="openSmartlink()">▼ CLICK ANY IMAGE & Wait 15 Seconds to GET LINK ▼</button>
+
+    <div id="anime-content">
+        <h3>Key Characteristics of Anime</h3>
+        <p><strong>Art Style:</strong> Features distinct visual traits like large, expressive eyes, vibrant hair colors, and dynamic action framing.</p>
+        <p><strong>Not a Genre:</strong> Anime is an art form and a medium. It spans countless genres, from horror and romance to science fiction and historical drama.</p>
+        <p><strong>Demographics:</strong> Unlike western animation, which is largely aimed at kids, anime has specific demographic categories: Kodomomuke, Shonen, Shojo, Seinen/Josei.</p>
+        <p><strong>Popular Platforms:</strong> You can stream official releases on Crunchyroll or Netflix.</p>
+    </div>
+
+    <button id="continue-btn" class="continue-btn" onclick="handleContinue()">CONTINUE</button>
+
+    <div style="margin-top:20px;">
+        <script type="text/javascript" src="https://www.highperformanceformat.com/11a07e056c0614350727fba232bcc005/invoke.js"></script>
+    </div>
+</div>
+
+<script>
+    const SMARTLINK = "https://www.effectivecpmnetwork.com/mrneyfk9?key=a0779778c1be0ef56d1f5e81ea137647";
+
+    function openSmartlink() {
+        window.open(SMARTLINK, '_blank');
+    }
+
+    // Timer Logic
+    let timeLeft = 10;
+    const timerDisplay = document.getElementById('timer');
+    const verifyBtn = document.getElementById('verify-btn');
+
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerHTML = `Please wait: ${timeLeft} seconds`;
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerDisplay.style.display = 'none';
+            verifyBtn.style.display = 'inline-block';
         }
-    </script>
+    }, 1000);
+
+    // Verify Click Logic
+    function startLoading() {
+        document.getElementById('loading').style.display = 'block';
+        verifyBtn.style.display = 'none';
+        
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('anime-content').style.display = 'block';
+            document.getElementById('continue-btn').style.display = 'block';
+        }, 4000);
+    }
+
+    // Continue Logic
+    function handleContinue() {
+        window.open(SMARTLINK, '_blank');
+        window.location.href = 'point2.html';
+    }
+</script>
+
 </body>
 </html>
