@@ -3,56 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RewardPlay | Task Page</title>
+    <title>Verification Page</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
+        .ad-header, .ad-footer { margin: 10px 0; }
+        .center-box { border: 2px solid #ccc; padding: 20px; width: 80%; margin: 20px auto; border-radius: 10px; }
+        .hidden { display: none; }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        #timer { font-size: 24px; font-weight: bold; margin: 10px; }
+    </style>
+    
     <script src="https://pl29356253.effectivecpmnetwork.com/23/52/7b/23527bc19bc0c40d9ce713d855526d69.js"></script>
     <script src="https://pl29356256.effectivecpmnetwork.com/17/e9/8a/17e98a5734a03ce7f125160fdb7dd4a8.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-4">
+<body>
+
+    <div class="ad-header">
+        <script>atOptions = {'key' : '316607f642e9799b9d1b6f5f5db9d378','format' : 'iframe','height' : 90,'width' : 728,'params' : {}};</script>
+        <script src="https://www.highperformanceformat.com/316607f642e9799b9d1b6f5f5db9d378/invoke.js"></script>
+    </div>
+
+    <div class="center-box">
+        <div id="status-text">Please wait...</div>
+        <div id="timer">9</div>
+        <button id="verify-btn" class="hidden" onclick="startSecondTimer()">Verify</button>
+        <button id="continue-btn" class="hidden" onclick="openPages()">Continue</button>
+    </div>
+
+    <div class="ad-footer">
+        <script>atOptions = {'key' : '11a07e056c0614350727fba232bcc005','format' : 'iframe','height' : 250,'width' : 300,'params' : {}};</script>
+        <script src="https://www.highperformanceformat.com/11a07e056c0614350727fba232bcc005/invoke.js"></script>
+    </div>
 
     <script>
-        function openSmartLink() {
-            window.open('https://www.effectivecpmnetwork.com/mrneyfk9?key=a0779778c1be0ef56d1f5e81ea137647', '_blank');
+        let timeLeft = 9;
+        const timerDisplay = document.getElementById('timer');
+        const verifyBtn = document.getElementById('verify-btn');
+        const continueBtn = document.getElementById('continue-btn');
+        const statusText = document.getElementById('status-text');
+
+        // First Timer (9 Seconds)
+        const countdown1 = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown1);
+                timerDisplay.classList.add('hidden');
+                verifyBtn.classList.remove('hidden');
+                statusText.innerText = "Click Verify to proceed";
+            }
+        }, 1000);
+
+        // Second Timer (10 Seconds)
+        function startSecondTimer() {
+            verifyBtn.classList.add('hidden');
+            statusText.innerText = "Verifying... wait 10 seconds";
+            timerDisplay.classList.remove('hidden');
+            timeLeft = 10;
+            timerDisplay.innerText = timeLeft;
+
+            const countdown2 = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown2);
+                    timerDisplay.classList.add('hidden');
+                    continueBtn.classList.remove('hidden');
+                    statusText.innerText = "Done! Click Continue";
+                }
+            }, 1000);
+        }
+
+        // Open Pages
+        function openPages() {
+            // Open point2.html in new tab
+            window.open('point2.html', '_blank');
+            // Redirect current page to Smartlink
+            window.location.href = 'https://www.effectivecpmnetwork.com/mrneyfk9?key=a0779778c1be0ef56d1f5e81ea137647';
         }
     </script>
-
-    <div class="max-w-md w-full bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl">
-        
-        <h2 class="text-2xl font-black mb-4">Classroom of the elite (S - 04)</h2>
-        <p class="text-slate-400 mb-2">Audio - Hindi (#official)</p>
-        <p class="text-slate-400 mb-6">Quality : High Definition</p>
-
-        <div class="my-4 flex justify-center">
-            <script>
-              atOptions = {'key' : '11a07e056c0614350727fba232bcc005','format' : 'iframe','height' : 250,'width' : 300,'params' : {}};
-            </script>
-            <script src="https://www.highperformanceformat.com/11a07e056c0614350727fba232bcc005/invoke.js"></script>
-        </div>
-
-        <div class="space-y-4 mt-6">
-            <button onclick="openSmartLink()" class="w-full py-4 bg-purple-600 rounded-xl font-bold hover:bg-purple-700 transition">1080p ⚙️ Download</button>
-            <button onclick="openSmartLink()" class="w-full py-4 bg-purple-600 rounded-xl font-bold hover:bg-purple-700 transition">720p ⚙️ Download</button>
-            <button onclick="openSmartLink()" class="w-full py-4 bg-purple-600 rounded-xl font-bold hover:bg-purple-700 transition">480p ⚙️ Download</button>
-        </div>
-
-        <div class="mt-8 text-center text-sm text-slate-500">
-            <p class="text-slate-300">Note :- Guys Episode 1 Upload hai ja kar direct Episode dak lo 🔥</p>
-            <p class="mt-2">400 click target 🎯 in public</p>
-            <p class="mt-2 text-purple-400">Dub by : @ATOMIC_DUBBERS</p>
-        </div>
-    </div>
-
-    <div class="my-6 w-full max-w-md">
-        <script async="async" data-cfasync="false" src="https://pl29356254.effectivecpmnetwork.com/86adcd133a15be5f1f9c27dd8bdd54f1/invoke.js"></script>
-        <div id="container-86adcd133a15be5f1f9c27dd8bdd54f1"></div>
-    </div>
-
-    <div class="fixed bottom-0 left-0 w-full flex justify-center bg-slate-900 p-2 border-t border-slate-800">
-        <script>
-          atOptions = {'key' : 'acb00b4337b2f659fa88aef18216824f','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};
-        </script>
-        <script src="https://www.highperformanceformat.com/acb00b4337b2f659fa88aef18216824f/invoke.js"></script>
-    </div>
-
 </body>
 </html>
