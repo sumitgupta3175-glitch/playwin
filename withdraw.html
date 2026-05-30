@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw Money</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <style>
         body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
         .container { width: 90%; max-width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
@@ -20,46 +24,95 @@
     <form id="withdrawForm">
         <input type="text" id="upiId" placeholder="Enter UPI ID (e.g., name@upi)" required>
         <input type="number" id="amount" placeholder="Amount (Minimum ₹100)" required>
-        <button type="submit">Submit Request</button>
+        <button type="submit" id="submitBtn">Submit Request</button>
     </form>
 </div>
 
 <script>
-    // 1. Firebase Initialization (Apna config yahan daalo)
-    // const firebaseConfig = { ... };
-    // firebase.initializeApp(firebaseConfig);
+    // 1. Firebase Config (Yahan apna data daalo)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_ID",
+        appId: "YOUR_APP_ID"
+    };
 
-    document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Dummy User ID (jab tak tum login system nahi banate)
+    const userId = "testUser123"; 
+
+    document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true; // Button disable karo taaki double click na ho
 
         const upiId = document.getElementById('upiId').value;
         const amount = parseFloat(document.getElementById('amount').value);
-        const minLimit = 100;
-
-        // 2. Minimum Limit Validation
-        if (amount < minLimit) {
+        
+        if (amount < 100) {
             alert("Error: Minimum withdrawal limit is ₹100.");
+            btn.disabled = false;
             return;
         }
 
-        // 3. Database me bhejne ka code (Firebase)
-        console.log("Processing Request for:", upiId, "Amount:", amount);
-        
-        // Agar database connect hai toh ye uncomment karo:
-        /*
-        firebase.firestore().collection("withdrawals").add({
-            upiId: upiId,
-            amount: amount,
-            status: "pending",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
+        try {
+            // User ka data fetch karo
+            const userDoc = await db.collection("users").doc(userId).get();
+            
+            if (!userDoc.exists) {
+                alert("User not found!");
+                btn.disabled = false;
+                return;
+            }
+
+            const userData = userDoc.data();
+
+            // 1. Check Balance
+            if (userData.points < amount) {
+                alert("Bhai, tumhare paas utne points nahi hain!");
+                btn.disabled = false;
+                return;
+            }
+
+            // 2. Check 24-hour limit
+            if (userData.lastWithdrawalDate) {
+                const lastWithdrawal = userData.lastWithdrawalDate.toDate();
+                const now = new Date();
+                const diffInHours = (now - lastWithdrawal) / (1000 * 60 * 60);
+
+                if (diffInHours < 24) {
+                    alert("Limit exceeded! You can only withdraw once every 24 hours.");
+                    btn.disabled = false;
+                    return;
+                }
+            }
+
+            // 3. Save withdrawal request
+            await db.collection("withdrawals").add({
+                userId: userId,
+                upiId: upiId,
+                amount: amount,
+                status: "pending",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // 4. Update user last withdrawal time
+            await db.collection("users").doc(userId).update({
+                lastWithdrawalDate: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
             alert("Request submitted successfully!");
-        }).catch((error) => {
+            btn.disabled = false;
+        } catch (error) {
+            console.error(error);
             alert("Error: " + error.message);
-        });
-        */
-        
-        alert("Request submitted for ₹" + amount + ". Admin will process it soon.");
+            btn.disabled = false;
+        }
     });
 </script>
 
