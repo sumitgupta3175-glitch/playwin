@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw Money</title>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     
     <style>
         body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
@@ -29,7 +29,7 @@
 </div>
 
 <script>
-    // 1. Firebase Config (Yahan apna data daalo)
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -41,18 +41,24 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
-    // Dummy User ID (jab tak tum login system nahi banate)
-    const userId = "testUser123"; 
+    const auth = firebase.auth();
 
     document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        // 1. Auth check: User login hai ya nahi?
+        const user = auth.currentUser;
+        if (!user) {
+            alert("Bhai, pehle login karo!");
+            return;
+        }
+
         const btn = document.getElementById('submitBtn');
-        btn.disabled = true; // Button disable karo taaki double click na ho
+        btn.disabled = true;
 
         const upiId = document.getElementById('upiId').value;
         const amount = parseFloat(document.getElementById('amount').value);
+        const userId = user.uid; // Ab ye dynamic hai!
         
         if (amount < 100) {
             alert("Error: Minimum withdrawal limit is ₹100.");
@@ -61,25 +67,22 @@
         }
 
         try {
-            // User ka data fetch karo
             const userDoc = await db.collection("users").doc(userId).get();
             
             if (!userDoc.exists) {
-                alert("User not found!");
+                alert("User profile not found!");
                 btn.disabled = false;
                 return;
             }
 
             const userData = userDoc.data();
 
-            // 1. Check Balance
             if (userData.points < amount) {
-                alert("Bhai, tumhare paas utne points nahi hain!");
+                alert("Insufficient balance!");
                 btn.disabled = false;
                 return;
             }
 
-            // 2. Check 24-hour limit
             if (userData.lastWithdrawalDate) {
                 const lastWithdrawal = userData.lastWithdrawalDate.toDate();
                 const now = new Date();
@@ -92,7 +95,7 @@
                 }
             }
 
-            // 3. Save withdrawal request
+            // Save request
             await db.collection("withdrawals").add({
                 userId: userId,
                 upiId: upiId,
@@ -101,13 +104,14 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // 4. Update user last withdrawal time
+            // Update user balance/time
             await db.collection("users").doc(userId).update({
                 lastWithdrawalDate: firebase.firestore.FieldValue.serverTimestamp()
             });
 
             alert("Request submitted successfully!");
             btn.disabled = false;
+            document.getElementById('withdrawForm').reset();
         } catch (error) {
             console.error(error);
             alert("Error: " + error.message);
